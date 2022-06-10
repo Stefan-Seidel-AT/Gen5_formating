@@ -1,0 +1,26 @@
+Option Explicit
+Sub remove_sheet1_label()
+
+' macro removes last 8 characters of each Worksheet name
+
+Dim WS As Worksheet
+Dim sheetname As String
+Dim newsheetname As String
+ 
+
+For Each WS In ActiveWorkbook.Worksheets
+
+    
+    sheetname = WS.Name
+    
+    
+    If Len(sheetname) > 10 Then
+
+    newsheetname = Left(sheetname, Len(sheetname) - 8)
+    WS.Name = newsheetname
+    
+     End If
+    
+Next WS
+   
+End Sub
