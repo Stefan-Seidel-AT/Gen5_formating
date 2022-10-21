@@ -1,0 +1,164 @@
+Sub print_PowerExport_ELISA_general()
+
+' program copy/pastes cells("A1" to "Z29") from sheets of an excel file consecutively
+' to a summary sheet named "printout_general" and resizes for printout
+
+
+'Declaration
+Dim WS As Worksheet
+Dim linecounter As Integer
+Dim mergecells As Integer
+Dim deleteline As Integer
+Dim lineborder As Integer
+Dim pasteanchor As Integer
+Dim mergecellsanchor As Integer
+Dim pagecounter As Integer
+
+
+
+Worksheets.Add().Name = "printout_general"
+
+deleteline = 9
+lineborder = 30
+pasteanchor = 1
+mergecellsanchor = 7
+
+
+For Each WS In ActiveWorkbook.Worksheets
+
+' ignore following worksheets: Summary, printout_general, Infection readout
+If Not WS.Name = "Summary" Then
+If Not WS.Name = "printout_general" Then
+If Not WS.Name = "Infection readout" Then
+
+    WS.Select
+
+    Range("A1", "Z29").Copy
+    With ActiveSheet.Range("A1", "Z29")
+        .PasteSpecial xlPasteColumnWidths
+        
+    End With
+    
+    Worksheets("printout_general").Select
+    
+    
+    ActiveSheet.Range(Cells(pasteanchor, 1), Cells(pasteanchor, 1)).PasteSpecial Paste:=xlPasteColumnWidths
+    
+    WS.Select
+    With ActiveSheet.Range("A1", "Z29")
+          .PasteSpecial xlPasteFormats
+    End With
+    
+    Worksheets("printout_general").Select
+    ActiveSheet.Range(Cells(pasteanchor, 1), Cells(pasteanchor, 1)).PasteSpecial Paste:=xlPasteFormats
+    
+     WS.Select
+    With ActiveSheet.Range("A1", "Z29")
+        .PasteSpecial xlPasteValues
+    End With
+    
+    Worksheets("printout_general").Select
+    ActiveSheet.Range(Cells(pasteanchor, 1), Cells(pasteanchor, 1)).PasteSpecial Paste:=xlPasteValues
+    
+      WS.Select
+    With ActiveSheet.Range("A1", "Z29")
+        .PasteSpecial xlPasteAll
+    End With
+    
+    Worksheets("printout_general").Select
+    ActiveSheet.Range(Cells(pasteanchor, 1), Cells(pasteanchor, 1)).PasteSpecial Paste:=xlPasteAll
+    
+    WS.Select
+        ActiveSheet.Pictures(1).Select
+    Selection.Copy
+  
+    Worksheets("printout_general").Select
+        Range(Cells(pasteanchor + 2, 6), Cells(pasteanchor + 2, 6)).Select
+        ActiveSheet.Paste
+            
+            
+          pasteanchor = pasteanchor + 30
+          lineborder = lineborder + 30
+          pagecounter = pagecounter + 1
+          
+          If pagecounter = 5 Then
+          
+          'print workbookname
+          Range(Cells(lineborder - 30, 1), Cells(lineborder - 30, 1)).Value = ActiveWorkbook.FullName
+          
+          pasteanchor = pasteanchor + (44)
+          lineborder = lineborder + (44)
+          pagecounter = 0
+          
+          End If
+          
+            
+        
+
+End If
+End If
+End If
+
+Next
+
+Worksheets("printout_general").Select
+
+' resizing worksheet for comfortable print out
+
+ Application.PrintCommunication = False
+    With ActiveSheet.PageSetup
+        .PrintTitleRows = ""
+        .PrintTitleColumns = ""
+    End With
+    Application.PrintCommunication = True
+    ActiveSheet.PageSetup.PrintArea = ""
+    Application.PrintCommunication = False
+    With ActiveSheet.PageSetup
+        .LeftHeader = ""
+        .CenterHeader = ""
+        .RightHeader = ""
+        .LeftFooter = ""
+        .CenterFooter = ""
+        .RightFooter = ""
+        .LeftMargin = Application.InchesToPoints(0.7)
+        .RightMargin = Application.InchesToPoints(0.7)
+        .TopMargin = Application.InchesToPoints(0.75)
+        .BottomMargin = Application.InchesToPoints(0.75)
+        .HeaderMargin = Application.InchesToPoints(0.3)
+        .FooterMargin = Application.InchesToPoints(0.3)
+        .PrintHeadings = False
+        .PrintGridlines = False
+        .PrintComments = xlPrintNoComments
+        .PrintQuality = 600
+        .CenterHorizontally = False
+        .CenterVertically = False
+        .Orientation = xlPortrait
+        .Draft = False
+        .PaperSize = xlPaperA4
+        .FirstPageNumber = xlAutomatic
+        .Order = xlDownThenOver
+        .BlackAndWhite = False
+        .Zoom = 30
+        .PrintErrors = xlPrintErrorsDisplayed
+        .OddAndEvenPagesHeaderFooter = False
+        .DifferentFirstPageHeaderFooter = False
+        .ScaleWithDocHeaderFooter = True
+        .AlignMarginsHeaderFooter = True
+        .EvenPage.LeftHeader.Text = ""
+        .EvenPage.CenterHeader.Text = ""
+        .EvenPage.RightHeader.Text = ""
+        .EvenPage.LeftFooter.Text = ""
+        .EvenPage.CenterFooter.Text = ""
+        .EvenPage.RightFooter.Text = ""
+        .FirstPage.LeftHeader.Text = ""
+        .FirstPage.CenterHeader.Text = ""
+        .FirstPage.RightHeader.Text = ""
+        .FirstPage.LeftFooter.Text = ""
+        .FirstPage.CenterFooter.Text = ""
+        .FirstPage.RightFooter.Text = ""
+    End With
+    Application.PrintCommunication = True
+
+
+
+End Sub
